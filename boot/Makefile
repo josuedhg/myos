@@ -2,10 +2,12 @@
 
 all: file.img
 
+boot_main.o:
+	gcc -m32 -c boot_main.c -o boot_main.o
 boot.o:
-	gcc -c  -g boot.S -o boot.o
+	gcc -m32 -c  -g boot.S -o boot.o
 file.img: boot.o
-	ld --oformat binary -o file.img -T boot.ld boot.o
+	ld --oformat binary -m elf_i386 -o file.img -T boot.ld boot.o
 run: file.img
 	qemu-system-i386 -hda file.img
 clean:

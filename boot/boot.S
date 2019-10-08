@@ -14,13 +14,10 @@ init_dl: .byte 0
 
 	CLEAN
 	RESET_CURSOR
-	PRINT_STR $start_msg, $11
-	PRINT_STR $gdt_msg, $11
 	LOAD_NSECTOR $1
 
 	lgdt gdtdesc
 
-	PRINT_STR $protecte_msg, $23
 	mov %cr0, %eax
 	mov $0x1, %eax
 	mov %eax, %cr0
@@ -34,9 +31,8 @@ start32:
 	mov %ax, %es
 	mov %ax, %ss
 
-        PRINT_STR_PMODE $pmode_hello_msg
-
 	mov $0x8000, %esp // move the esp to a any place
+	call boot_main
 halt:
 	hlt
 	jmp halt
@@ -49,15 +45,3 @@ gdt:
 gdtdesc:
 	.word (gdtdesc - gdt - 1)
 	.long gdt
-
-start_msg:
-	.ascii "starting..."
-gdt_msg:
-	.ascii "setting gdt"
-protecte_msg:
-	.ascii "enabling protected mode"
-jmp_cs_msg:
-	.ascii "jump to cs"
-pmode_hello_msg:
-        .ascii "Hello from protected mode!"
-        .byte 0x0
